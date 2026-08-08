@@ -25,7 +25,7 @@ print("Mula menarik data dari Spotify...")
 for artist_name, artist_id in ARTISTS.items():
     try:
         # Tarik album-album artis
-        albums = sp.artist_albums(artist_id, album_type='album', limit=50)
+        albums = sp.artist_albums(artist_id, album_type='album')
         
         for album in albums['items']:
             album_id = album['id']

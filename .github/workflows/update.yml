@@ -1,0 +1,39 @@
+name: Kemaskini Data Munsyid
+
+on:
+  schedule:
+    # Berjalan secara automatik pada 1hb setiap bulan (pukul 12 tengah malam)
+    - cron: '0 0 1 * *'
+  workflow_dispatch: # Membolehkan kau tekan butang "Run" secara manual bila-bila masa
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Ambil Kod
+      uses: actions/checkout@v3
+
+    - name: Sediakan Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Pasang Library Spotify
+      run: |
+        python -m pip install --upgrade pip
+        pip install spotipy pandas
+
+    - name: Jalankan Skrip Pengekstrakan
+      env:
+        SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+        SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+      run: python fetch_data.py
+
+    - name: Simpan Fail CSV Baru ke GitHub
+      run: |
+        git config --global user.name "GitHub Action Bot"
+        git config --global user.email "action@github.com"
+        git add munsyid_data.csv
+        git commit -m "Automasi: Data Munsyid Dikemas Kini" || exit 0
+        git push

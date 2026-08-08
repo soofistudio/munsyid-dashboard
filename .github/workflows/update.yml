@@ -2,9 +2,8 @@ name: Kemaskini Data Munsyid
 
 on:
   schedule:
-    # Berjalan secara automatik pada 1hb setiap bulan (pukul 12 tengah malam)
     - cron: '0 0 1 * *'
-  workflow_dispatch: # Membolehkan kau tekan butang "Run" secara manual bila-bila masa
+  workflow_dispatch: 
 
 jobs:
   build:
@@ -12,10 +11,10 @@ jobs:
 
     steps:
     - name: Ambil Kod
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4 # Dikemas kini ke v4
 
     - name: Sediakan Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5 # Dikemas kini ke v5
       with:
         python-version: '3.10'
 
@@ -35,5 +34,6 @@ jobs:
         git config --global user.name "GitHub Action Bot"
         git config --global user.email "action@github.com"
         git add munsyid_data.csv
-        git commit -m "Automasi: Data Munsyid Dikemas Kini" || exit 0
+        # Tambah semakan supaya bot tak ralat kalau tiada perubahan data
+        git diff --quiet && git diff --staged --quiet || git commit -m "Automasi: Data Munsyid Dikemas Kini"
         git push

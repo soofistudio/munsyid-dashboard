@@ -1,58 +1,45 @@
-import os
-import spotipy
-from spotipy.oauth2 import SpotifyClientCredentials
+import requests
 import pandas as pd
 
-# Ambil kunci dari GitHub Secrets
-CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID')
-CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET')
-
-# Sambung ke Spotify
-auth_manager = SpotifyClientCredentials(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
-sp = spotipy.Spotify(auth_manager=auth_manager)
-
-# Senarai Artis Nasyid Malaysia yang nak ditarik
-ARTISTS = {
-    'Raihan': '2893j4VvWwX9H08nE72qT5',
-    'Rabbani': '6y4L1S5V8C3GZ4QxJ8a9bC',
-    'Hijjaz': '1x1G0R8K8S9T7U0V1W2X3Y'
-}
-
+# Kau boleh tambah nama kumpulan lain dalam kurungan ini nanti!
+ARTISTS = ['Raihan', 'Rabbani', 'Hijjaz', 'Inteam', 'UNIC'] 
 data_list = []
 
-print("Mula menarik data dari Spotify...")
+print("Mula menarik data dari pelayan Apple Music...")
 
-for artist_name, artist_id in ARTISTS.items():
+for artist in ARTISTS:
+    print(f"Sedang mencari data untuk: {artist}")
+    # URL carian iTunes API (country=MY untuk pasaran Malaysia)
+    url = f"https://itunes.apple.com/search?term={artist}&entity=song&limit=200&country=my"
+    
     try:
-        # Tarik album-album artis
-        albums = sp.artist_albums(artist_id, album_type='album')
+        response = requests.get(url)
+        data = response.json()
         
-        for album in albums['items']:
-            album_id = album['id']
-            album_detail = sp.album(album_id)
-            
-            release_date = album_detail.get('release_date', 'N/A')
-            year = release_date[:4] if release_date else 'N/A'
-            label = album_detail.get('label', 'N/A')
-            
-            # Tarik lagu dalam album
-            tracks = sp.album_tracks(album_id)
-            for track in tracks['items']:
-                track_info = sp.track(track['id'])
-                
-                data_list.append({
-                    'Nama Artis': artist_name,
-                    'Tajuk Album': album['name'],
-                    'Tajuk Lagu': track['name'],
-                    'Tahun Terbitan': year,
-                    'Label': label,
-                    'Skor Populariti (0-100)': track_info.get('popularity', 0),
-                    'Spotify URL': track['external_urls']['spotify']
-                })
+        if 'results' in data:
+            for track in data['results']:
+                # Pastikan nama artis betul (elak tarik lagu artis lain nama sama)
+                if artist.lower() in track.get('artistName', '').lower():
+                    release_date = track.get('releaseDate', 'N/A')
+                    year = release_date[:4] if release_date != 'N/A' else 'N/A'
+                    
+                    data_list.append({
+                        'Nama Artis': track.get('artistName', 'N/A'),
+                        'Tajuk Album': track.get('collectionName', 'N/A'),
+                        'Tajuk Lagu': track.get('trackName', 'N/A'),
+                        'Tahun Terbitan': year,
+                        'Genre': track.get('primaryGenreName', 'N/A'),
+                        'Pautan': track.get('trackViewUrl', '#')
+                    })
     except Exception as e:
-        print(f"Ralat pada artis {artist_name}: {e}")
+        print(f"Ralat pada artis {artist}: {e}")
 
-# Tukar data jadi fail CSV
+# Tukar data jadi jadual
 df = pd.DataFrame(data_list)
+
+# Buang lagu yang berulang (duplicate)
+df = df.drop_duplicates(subset=['Tajuk Lagu', 'Nama Artis'])
+
+# Simpan ke CSV
 df.to_csv('munsyid_data.csv', index=False)
-print("Data berjaya disimpan dalam fail munsyid_data.csv!")
+print(f"Berjaya! {len(df)} lagu telah berjaya disimpan ke dalam munsyid_data.csv")

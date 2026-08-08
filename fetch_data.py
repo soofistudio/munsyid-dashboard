@@ -2,7 +2,7 @@ import requests
 import pandas as pd
 
 # Kau boleh tambah nama kumpulan lain dalam kurungan ini nanti!
-ARTISTS = ['Raihan', 'Rabbani', 'Hijjaz', 'Inteam', 'UNIC'] 
+ARTISTS = ['Raihan', 'Rabbani', 'Hijjaz', 'Inteam', 'UNIC', 'A.N.A The Rayhan', 'AEYDAN', 'Azwan Far East', 'Adikku Sayang', 'Ae-man', 'Akhil Hayy', 'Ae-One', 'Alarm Me', 'Al-Faradis', 'Aliff Ila Ya', 'Anugerah', 'Ustaz Amal', 'AMAR', 'The Bangsar Boyz and Friends', 'Bazli Unic', 'Darwish', 'Devotees', 'Diwani', 'RAST', 'ARDANI', 'Major 9', 'Soofi All Stars', 'Daqmie', 'Far East', 'Saujana', 'Mirwana', 'Nowseeheart', 'Fitri Haris', 'Fadzli Far East', 'Zayne', 'Rabithah', 'One Path', 'Adnin Roslan', 'Halim Ahmad', 'Saujana', 'Zawfan', 'Zayne', 'Marhaen', 'In-Team', 'Instinct', 'Amer BinYusoff', 'Fathi Saleem', 'Munif Hijjaz', 'Mestica', 'Dehearty', 'Anas Tahir', 'Syahrul Asad', 'Ustaz 3 Beradik', 'Maliq Suhaimi', 'Saff One', 'Simfoni', 'Imtiaz Simfoni', 'Munif Ahmad', 'Isman Hijjaz', 'The Muhibbain', 'Nazrey Johani', 'The Zikr', 'UMNAA', 'Amirul Zahid', 'Arsy Osman', 'Naufal Syakirin', 'Intisor', 'Wildaniey', 'Andika', 'Autotune Band', 'The Truth', 'Aniq Muhai', 'Fetya', 'Syed Salahuddin', 'Aftermath', 'GAU NASHEED'] 
 data_list = []
 
 print("Mula menarik data dari pelayan Apple Music...")

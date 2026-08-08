@@ -17,31 +17,30 @@ for artist in ARTISTS:
         
         if 'results' in data:
             for track in data['results']:
-                # Pastikan nama artis padan (elak artis lain yang terselit)
                 if artist.lower() in track.get('artistName', '').lower():
                     release_date = track.get('releaseDate', 'N/A')
                     year = release_date[:4] if release_date != 'N/A' else 'N/A'
-                    # Tukar kualiti cover art ke 600x600
                     cover_url = track.get('artworkUrl100', '').replace('100x100bb', '600x600bb')
+                    
+                    # Kita tambah pengekstrakan Komposer di sini
+                    komposer = track.get('composerName', 'N/A')
                     
                     data_list.append({
                         'ID Lagu': track.get('trackId', 'N/A'),
-                        'Album ID': track.get('collectionId', 'N/A'), # INI FUNGSI UPC KITA!
+                        'Album ID': track.get('collectionId', 'N/A'),
                         'Nama Artis': track.get('artistName', 'N/A'),
                         'Tajuk Album': track.get('collectionName', 'N/A'),
                         'Tajuk Lagu': track.get('trackName', 'N/A'),
                         'Tahun': year,
                         'Genre': track.get('primaryGenreName', 'N/A'),
                         'Pautan': track.get('trackViewUrl', '#'),
-                        'Cover': cover_url
+                        'Cover': cover_url,
+                        'Komposer': komposer # <--- KOLUM BARU
                     })
     except Exception as e:
         print(f"Ralat pada artis {artist}: {e}")
 
-# Tukar ke DataFrame
 df = pd.DataFrame(data_list)
-# Buang lagu yang duplicate menggunakan ID Lagu rasmi
 df = df.drop_duplicates(subset=['ID Lagu'])
-# Simpan ke CSV
 df.to_csv('munsyid_data.csv', index=False)
 print(f"Berjaya! {len(df)} lagu telah disimpan ke dalam munsyid_data.csv")

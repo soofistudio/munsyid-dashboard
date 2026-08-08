@@ -13,9 +13,9 @@ sp = spotipy.Spotify(auth_manager=auth_manager)
 
 # Senarai Artis Nasyid Malaysia yang nak ditarik
 ARTISTS = {
-    'Raihan': '0wWm1rOeaLQ4jkLpn8tmTt',
-    'Rabbani': '5xvnRMqWxcOC0Pvx9rLBHx',
-    'Hijjaz': '3kQyzPSSQbfzs01LnzFaSc'
+    'Raihan': '2893j4VvWwX9H08nE72qT5',
+    'Rabbani': '6y4L1S5V8C3GZ4QxJ8a9bC',
+    'Hijjaz': '1x1G0R8K8S9T7U0V1W2X3Y'
 }
 
 data_list = []

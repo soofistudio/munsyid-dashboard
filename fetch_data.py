@@ -28,3 +28,15 @@ for artist in ARTISTS:
 
 df = pd.DataFrame(data_list).drop_duplicates(subset=['id'])
 df.to_csv('munsyid_data.csv', index=False)
+
+# (Bahagian dalam gelung for...)
+                    data_list.append({
+                        'Album ID': track.get('collectionId', 'N/A'), # <--- TAMBAH BARIS INI
+                        'Nama Artis': track.get('artistName', 'N/A'),
+                        'Tajuk Album': track.get('collectionName', 'N/A'),
+                        'Tajuk Lagu': track.get('trackName', 'N/A'),
+                        'Tahun': year,
+                        'Genre': track.get('primaryGenreName', 'N/A'),
+                        'Pautan': track.get('trackViewUrl', '#'),
+                        'Cover': cover_url
+                    })
